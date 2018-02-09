@@ -1,6 +1,6 @@
 {
   "name": "@nemo.travel/api-parser",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Nemo frontend-API parser",
   "main": "index.js",
   "scripts": {
