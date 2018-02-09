@@ -1,4 +1,4 @@
-let pool = {};
+var pool = {};
 
 /**
  * Check if string looks like a reference to another object.
@@ -6,7 +6,7 @@ let pool = {};
  * @param {String} potentialRef
  * @returns {boolean}
  */
-const isRef = function(potentialRef) {
+var isRef = function(potentialRef) {
 	return potentialRef[0] === '$' || potentialRef.indexOf('$ref_') !== -1;
 };
 
@@ -16,7 +16,7 @@ const isRef = function(potentialRef) {
  * @param {string} ref
  * @returns {string}
  */
-const getURIByRef = function(ref) {
+var getURIByRef = function(ref) {
 	return ref.replace('$ref_', '');
 };
 
@@ -26,7 +26,7 @@ const getURIByRef = function(ref) {
  * @param {string} uri
  * @returns {*}
  */
-const getModelByURI = function(uri) {
+var getModelByURI = function(uri) {
 	return pool.hasOwnProperty(uri) ? pool[uri] : uri;
 };
 
@@ -36,10 +36,10 @@ const getModelByURI = function(uri) {
  * @param {Object} object
  * @returns {*}
  */
-const replaceRefsInObjects = function(object) {
-	for (const paramName in object) {
+var replaceRefsInObjects = function(object) {
+	for (var paramName in object) {
 		if (object.hasOwnProperty(paramName)) {
-			const paramValue = object[paramName];
+			var paramValue = object[paramName];
 
 			if (typeof paramValue === 'string' && isRef(paramValue)) {
 				object[paramName] = getModelByURI(getURIByRef(paramValue));
@@ -57,9 +57,9 @@ module.exports = function(response) {
 	pool = response;
 
 	// Loop through all objects in response.
-	for (const uri in response) {
+	for (var uri in response) {
 		if (response.hasOwnProperty(uri)) {
-			const object = response[uri];
+			var object = response[uri];
 
 			pool[uri] = replaceRefsInObjects(object);
 		}
