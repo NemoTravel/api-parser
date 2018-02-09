@@ -1,14 +1,16 @@
-export interface NemoAPIResponseObject {
-    uri: string;
-    hash: string;
-    modelType: string;
-    [param: string]: any;
+declare function NemoAPI(response: NemoAPI.Response): NemoAPI.Response;
+
+declare namespace NemoAPI {
+    interface ResponseObject {
+        uri: string;
+        hash: string;
+        modelType: string;
+        [param: string]: any;
+    }
+
+    interface Response {
+        [modelURI: string]: ResponseObject;
+    }
 }
 
-export interface NemoAPIResponse {
-    [modelURI: string]: NemoAPIResponseObject;
-}
-
-type NemoAPIParser = (response: NemoAPIResponse) => NemoAPIResponse;
-
-export default NemoAPIParser;
+export = NemoAPI;
