@@ -1,5 +1,5 @@
 const parser = require('../index');
-const assert = require('chai').assert;
+const expect = require('chai').expect;
 
 describe('Nemo API parser', () => {
 	it('should return object as is', () => {
@@ -14,10 +14,9 @@ describe('Nemo API parser', () => {
 			}
 		};
 
-		const jsonInitial = JSON.stringify(initialObject);
-		const jsonResult = JSON.stringify(parser(initialObject));
+		const parsedObject = parser(initialObject);
 
-		assert.strictEqual(jsonResult, jsonInitial);
+		expect(parsedObject).to.deep.equal(initialObject);
 	});
 
 	it('should replace object reference with object itself', () => {
@@ -33,10 +32,8 @@ describe('Nemo API parser', () => {
 		};
 
 		const parsedObject = parser(initialObject);
-		const jsonFirstObject = JSON.stringify(initialObject['some/object/1']);
-		const jsonReplacedObject = JSON.stringify(parsedObject['some/object/2'].value);
 
-		assert.strictEqual(jsonFirstObject, jsonReplacedObject);
+		expect(parsedObject['some/object/2'].value).to.deep.equal(initialObject['some/object/1']);
 	});
 
 	it('should replace deep object reference with object itself', () => {
@@ -52,9 +49,7 @@ describe('Nemo API parser', () => {
 		};
 
 		const parsedObject = parser(initialObject);
-		const jsonFirstObject = JSON.stringify(initialObject['some/object/1']);
-		const jsonReplacedObject = JSON.stringify(parsedObject['some/object/2'].value[0]);
 
-		assert.strictEqual(jsonFirstObject, jsonReplacedObject);
+		expect(parsedObject['some/object/2'].value[0]).to.deep.equal(initialObject['some/object/1']);
 	});
 });
