@@ -1,5 +1,3 @@
-var pool = {};
-
 /**
  * Check if string looks like a reference to another object.
  *
@@ -24,9 +22,10 @@ var getURIByRef = function(ref) {
  * Get object by API URI or return the URI itself if object doesn't exist.
  *
  * @param {string} uri
+ * @param {Object} pool
  * @returns {*}
  */
-var getModelByURI = function(uri) {
+var getModelByURI = function(uri, pool) {
 	return pool.hasOwnProperty(uri) ? pool[uri] : uri;
 };
 
@@ -34,18 +33,19 @@ var getModelByURI = function(uri) {
  * Loop through all properties in object and replace `$ref_xxx` links with objects from pool.
  *
  * @param {Object} object
+ * @param {Object} pool
  * @returns {*}
  */
-var replaceRefsInObjects = function(object) {
+var replaceRefsInObjects = function(object, pool) {
 	for (var paramName in object) {
 		if (object.hasOwnProperty(paramName)) {
 			var paramValue = object[paramName];
 
 			if (typeof paramValue === 'string' && isRef(paramValue)) {
-				object[paramName] = getModelByURI(getURIByRef(paramValue));
+				object[paramName] = getModelByURI(getURIByRef(paramValue), pool);
 			}
 			else if (typeof paramValue === 'object') {
-				object[paramName] = replaceRefsInObjects(paramValue);
+				object[paramName] = replaceRefsInObjects(paramValue, pool);
 			}
 		}
 	}
@@ -54,14 +54,14 @@ var replaceRefsInObjects = function(object) {
 };
 
 module.exports = function(response) {
-	pool = response;
+	var pool = response;
 
 	// Loop through all objects in response.
 	for (var uri in response) {
 		if (response.hasOwnProperty(uri)) {
 			var object = response[uri];
 
-			pool[uri] = replaceRefsInObjects(object);
+			pool[uri] = replaceRefsInObjects(object, pool);
 		}
 	}
 
