@@ -53,7 +53,7 @@ var replaceRefsInObjects = function(object, pool) {
 	return object;
 };
 
-module.exports = function(response) {
+var parse = function(response) {
 	var pool = response;
 
 	// Loop through all objects in response.
@@ -67,3 +67,5 @@ module.exports = function(response) {
 
 	return pool;
 };
+
+module.exports = parse;
